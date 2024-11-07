@@ -8,7 +8,7 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "prettier": "prettier \"**/*.+(js|jsx|astro|css|ts|tsx|cjs|mjs)\"",
+    "prettier": "prettier \"**/*.+(js|jsx|md|astro|css|ts|tsx|cjs|mjs)\"",
     "format": "pnpm prettier --list-different",
     "format:write": "pnpm prettier --write"
   },

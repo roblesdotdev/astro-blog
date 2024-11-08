@@ -1,11 +1,23 @@
 ---
+import type { GetStaticPathsOptions, Page } from 'astro'
+import type { CollectionEntry } from 'astro:content'
 import { getCollection } from 'astro:content'
 import Main from '~/components/Main.astro'
 import Pagination from '~/components/Pagination.astro'
 import PostList from '~/components/PostList.astro'
 import BaseLayout from '~/layouts/BaseLayout.astro'
 
-const allPosts = (await getCollection('posts')).slice(0, 6)
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+  const allPosts = await getCollection('posts')
+  return paginate(allPosts, { pageSize: 6 })
+}
+
+type Props = {
+  page: Page
+}
+
+const { page } = Astro.props
+const allPosts = page.data as CollectionEntry<'posts'>[]
 ---
 
 <BaseLayout title="Blog - Astro">
@@ -15,7 +27,7 @@ const allPosts = (await getCollection('posts')).slice(0, 6)
 
     <PostList posts={allPosts} />
     <div class="py-8">
-      <Pagination nextURL="/blog/2" />
+      <Pagination prevURL={page.url.prev} nextURL={page.url.next} />
     </div>
   </Main>
 </BaseLayout>

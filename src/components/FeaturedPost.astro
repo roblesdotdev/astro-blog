@@ -1,0 +1,33 @@
+---
+import { Image } from 'astro:assets'
+import type { CollectionEntry } from 'astro:content'
+import CategoryList from './CategoryList.astro'
+
+type Props = {
+  post: CollectionEntry<'posts'>
+}
+
+const { post } = Astro.props
+---
+
+<article class="mb-24 grid gap-4 lg:grid-cols-2">
+  <a href={`/blog/${post.slug}`}>
+    <Image
+      src={post.data.image}
+      width={1024}
+      height={1024 / 2}
+      class="aspect-thubnail rounded-2xl object-cover"
+      alt={post.data.title}
+    />
+  </a>
+  <div>
+    <div class="mb-4">
+      <CategoryList categories={post.data.categories} />
+    </div>
+    <a href={`/blog/${post.slug}`} class="text-xl font-bold"
+      ><h2>{post.data.title}</h2></a
+    >
+    <p class="mb-6 line-clamp-3 text-lg">{post.body}</p>
+    <span class="text-sm">{post.data.date}</span>
+  </div>
+</article>

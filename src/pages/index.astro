@@ -1,13 +1,19 @@
 ---
+import { getCollection } from 'astro:content'
+import FeaturedPost from '~/components/FeaturedPost.astro'
 import Main from '~/components/Main.astro'
 import BaseLayout from '~/layouts/BaseLayout.astro'
+
+const allPosts = await getCollection('posts')
+const featured = allPosts.filter(post => post.data.featured)
 ---
 
 <BaseLayout>
   <Main>
-    <h1 class="text-2xl font-bold">Main Content</h1>
+    <h1 class="text-2xl font-bold">Astro Blog</h1>
+    {featured.map(post => <FeaturedPost post={post} />)}
     <div class="mt-4">
-      <a href="/blog">Blog</a>
+      <a href="/blog">Posts</a>
     </div>
   </Main>
 </BaseLayout>

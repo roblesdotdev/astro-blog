@@ -1,0 +1,61 @@
+---
+import type { GetStaticPaths } from 'astro'
+import type { CollectionEntry } from 'astro:content'
+import { getCollection } from 'astro:content'
+import CategoryList from '~/components/CategoryList.astro'
+import Main from '~/components/Main.astro'
+import Pagination from '~/components/Pagination.astro'
+import PostList from '~/components/PostList.astro'
+import BaseLayout from '~/layouts/BaseLayout.astro'
+
+export const getStaticPaths = (async () => {
+  const posts = await getCollection('posts')
+  const allCategories = posts.flatMap(post => post.data.categories)
+  const categories = Array.from(new Set(allCategories))
+
+  const paths = categories.map(category => {
+    const postsByCategory = posts.filter(post =>
+      post.data.categories.includes(category),
+    )
+    return {
+      params: {
+        slug: category,
+      },
+      props: {
+        category,
+        posts: postsByCategory,
+      },
+    }
+  })
+
+  return paths
+}) satisfies GetStaticPaths
+
+type Props = {
+  category: string
+  posts: CollectionEntry<'posts'>[]
+}
+
+const { category, posts: allPosts } = Astro.props
+---
+
+<BaseLayout title="Blog - Astro">
+  <Main>
+    <div class="mb-6">
+      <a href="/blog">&larr; Back to all posts</a>
+    </div>
+    <h1 class="mb-5 text-6xl">Astro Blog</h1>
+    <p class="mb-12 sm:mb-24">Join the Community and learn.</p>
+
+    <div class="mb-8 grid items-center gap-3 sm:grid-cols-[auto,1fr]">
+      <h2 class="text-xl font-bold">Tags</h2>
+      <CategoryList categories={[category]} />
+    </div>
+
+    <PostList posts={allPosts} />
+
+    <div class="py-8">
+      <Pagination nextURL="/blog/2" />
+    </div>
+  </Main>
+</BaseLayout>

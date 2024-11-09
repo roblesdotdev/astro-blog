@@ -1,19 +1,36 @@
 ---
 import { getCollection } from 'astro:content'
+import CategoryList from '~/components/CategoryList.astro'
 import FeaturedPost from '~/components/FeaturedPost.astro'
 import Main from '~/components/Main.astro'
+import PostList from '~/components/PostList.astro'
 import BaseLayout from '~/layouts/BaseLayout.astro'
 
 const allPosts = await getCollection('posts')
 const featured = allPosts.filter(post => post.data.featured)
+
+// Recent
+const posts = allPosts.filter(post => !post.data.featured).slice(0, 4)
+const allCategories = posts.flatMap(post => post.data.categories)
+const categories = Array.from(new Set(allCategories))
 ---
 
 <BaseLayout>
   <Main>
     <h1 class="text-2xl font-bold">Astro Blog</h1>
     {featured.map(post => <FeaturedPost post={post} />)}
-    <div class="mt-4">
-      <a href="/blog">Posts</a>
+    <div class="mb-8 grid items-center gap-3 sm:grid-cols-[auto,1fr]">
+      <h2 class="text-xl font-bold">Recent Posts</h2>
+      <CategoryList categories={categories} />
+    </div>
+
+    <div class="mb-24">
+      <PostList posts={posts} />
+    </div>
+    <div class="flex justify-end">
+      <a href="/blog" class="rounded-xl bg-black px-4 py-3 text-white"
+        >All posts</a
+      >
     </div>
   </Main>
 </BaseLayout>

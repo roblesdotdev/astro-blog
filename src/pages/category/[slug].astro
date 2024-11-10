@@ -39,7 +39,7 @@ type Props = {
 const { category, posts: allPosts } = Astro.props
 ---
 
-<BaseLayout title="Blog - Astro">
+<BaseLayout title={`${category} posts`}>
   <Main>
     <div class="mb-6">
       <a href="/blog">&larr; Back to all posts</a>

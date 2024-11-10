@@ -25,7 +25,11 @@ const { data: post } = rawPost
 const { Content } = await rawPost.render()
 ---
 
-<BaseLayout title={post.title}>
+<BaseLayout
+  title={post.title}
+  image={post.image.src}
+  keywords={post.categories.join(',')}
+>
   <Main>
     <div class="mb-6">
       <a href="/blog">&larr; Back to all posts</a>
